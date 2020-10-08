@@ -1,5 +1,5 @@
 import React from 'react'
-import { Input,
+import {
   Card,
   Image,
 } from 'semantic-ui-react'
