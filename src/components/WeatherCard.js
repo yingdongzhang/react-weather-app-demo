@@ -11,9 +11,8 @@ export default function WeatherCard({city, weather}){
     <Card>
       <Image src={`https://openweathermap.org/img/wn/${icon}@4x.png`} wrapped ui={false} />
       <Card.Content>
-        <Card.Header>{`${city}. Now: ${temp}°C`}</Card.Header>
+        <Card.Header>{`${temp}°C, ${description}`}</Card.Header>
         <Card.Meta><span>{`Feels like ${feels_like}°C, min ${temp_min}°C, max ${temp_max}°C`}</span></Card.Meta>
-        <Card.Description>{description}</Card.Description>
       </Card.Content>
     </Card>
   )
