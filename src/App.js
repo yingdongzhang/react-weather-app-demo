@@ -1,5 +1,5 @@
 import React from 'react'
-import { Input, Button } from 'semantic-ui-react'
+import { Form, Input, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
 import './App.css'
@@ -13,18 +13,15 @@ class App extends React.Component {
     this.state = {
       city: '',
     }
-
-    this.handleCityInputChange = this.handleCityInputChange.bind(this)
-    this.searchWeather = this.searchWeather.bind(this)
   }
 
-  handleCityInputChange(e) {
+  handleCityInputChange = (e) => {
     this.setState({
       city: e.target.value
     })
   }
 
-  searchWeather() {
+  handleSearch = () => {
     const { fetchWeather } = this.props
     fetchWeather(this.state.city)
   }
@@ -46,13 +43,21 @@ class App extends React.Component {
     const { weather, loading } = weatherData
 
     return (
-      <div className="app-container">
-        <h1>Current weather in {city}</h1>
-        {weather && <WeatherCard weather={weather} />}
-        <div>
-          <h3>Enter your city</h3>
-          <Input placeholder='Melbourne, AU' loading={loading} onChange={this.handleCityInputChange} />
-          <Button primary loading={loading} onClick={this.searchWeather}>Search</Button>
+      <div>
+        <div className="row">
+          <Form>
+            <Form.Group inline>
+              <Form.Field>
+                <label>Enter your city</label>
+                <Input placeholder='Melbourne, AU' loading={loading} onChange={this.handleCityInputChange} />
+              </Form.Field>
+              <Button primary loading={loading} onClick={this.handleSearch}>Search</Button>
+            </Form.Group>
+          </Form>
+        </div>
+        <div className="row">
+          <h2>Current weather in {city}</h2>
+          {weather && <WeatherCard weather={weather} />}
         </div>
       </div>
     )
@@ -67,7 +72,7 @@ export default connect(
   },
   (dispatch) => {
     return {
-      fetchWeather: city => dispatch(fetchWeather(city)),
+      fetchWeather: (city) => dispatch(fetchWeather(city)),
     }
   }
-)(App);
+)(App)

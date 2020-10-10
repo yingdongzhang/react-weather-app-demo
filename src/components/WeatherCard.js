@@ -5,7 +5,7 @@ import {
 } from 'semantic-ui-react'
 import './WeatherCard.css'
 
-export default function WeatherCard({city, weather}){
+export default function WeatherCard({weather}){
   const { icon, temp, feels_like, temp_min, temp_max, description } = weather
   return (
     <Card>
