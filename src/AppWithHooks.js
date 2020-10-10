@@ -12,7 +12,9 @@ export default function AppWithHooks() {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (weather) {
+    if (loading) {
+      document.title = 'loading...'
+    } else if (weather) {
       document.title = `${city} - ${weather.temp}°C`
     }
   })

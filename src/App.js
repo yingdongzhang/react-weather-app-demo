@@ -33,7 +33,9 @@ class App extends React.Component {
     const { city } = this.state
     const { weatherData } = this.props
 
-    if (weatherData.weather) {
+    if (weatherData.loading) {
+      document.title = 'loading...'
+    } else if (weatherData.weather) {
       document.title = `${city} - ${weatherData.weather.temp}°C`
     }
   }
