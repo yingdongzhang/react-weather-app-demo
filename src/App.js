@@ -49,7 +49,7 @@ class App extends React.Component {
     return (
       <div className="app-container">
         <h1>Current weather in {city}</h1>
-        {weather && <WeatherCard city={city} weather={weather} />}
+        {weather && <WeatherCard weather={weather} />}
         <div>
           <h3>Enter your city</h3>
           <Input placeholder='Melbourne, AU' loading={loading} onChange={this.handleCityInputChange} />
