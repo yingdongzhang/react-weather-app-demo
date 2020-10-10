@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Input, Button } from 'semantic-ui-react'
 import './App.css'
 import WeatherCard from './components/WeatherCard'
+import fetchWeatherApi from './api/fetchWeatherApi'
 
 export default function AppWithHooks() {
   const [ city, setCity ] = useState('')
@@ -16,12 +17,7 @@ export default function AppWithHooks() {
 
   async function fetchWeather() {
     setLoading(true)
-    const response = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=[YOUR_API_KEY]`)
-    const data = await response.json()
-    const weather = {
-      ...data.main,
-      ...data.weather[0],
-    }
+    const weather = await fetchWeatherApi(city)
     setWeather(weather)
     setLoading(false)
   }

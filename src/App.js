@@ -2,6 +2,7 @@ import React from 'react'
 import { Input, Button } from 'semantic-ui-react'
 import './App.css'
 import WeatherCard from './components/WeatherCard'
+import fetchWeatherApi from './api/fetchWeatherApi'
 
 class App extends React.Component {
   constructor(props) {
@@ -27,12 +28,9 @@ class App extends React.Component {
     this.setState({
       loading: true,
     })
-    const response = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${this.state.city}&units=metric&appid=[YOUR_API_KEY]`)
-    const data = await response.json()
-    const weather = {
-      ...data.main,
-      ...data.weather[0],
-    }
+
+    const weather = await fetchWeatherApi(this.state.city)
+
     this.setState({
       weather,
       loading: false,
