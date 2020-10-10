@@ -1,5 +1,7 @@
 import React from 'react'
-import { Input, Button } from 'semantic-ui-react'
+import { Form, Input, Button } from 'semantic-ui-react'
+import moment from 'moment'
+
 import './App.css'
 import WeatherCard from './components/WeatherCard'
 import fetchWeatherApi from './api/fetchWeatherApi'
@@ -12,19 +14,20 @@ class App extends React.Component {
       city: '',
       weather: null,
       loading: false,
+      time: '',
+      intervId: null,
     }
-
-    this.handleCityInputChange = this.handleCityInputChange.bind(this)
-    this.searchWeather = this.searchWeather.bind(this)
   }
 
-  handleCityInputChange(e) {
+  handleCityInputChange = (e) => {
     this.setState({
-      city: e.target.value
+      city: e.target.value,
+      time: '',
+      weather: null,
     })
   }
 
-  async searchWeather() {
+  fetchWeather = async () => {
     this.setState({
       loading: true,
     })
@@ -44,16 +47,47 @@ class App extends React.Component {
     }
   }
 
+  componentDidMount() {
+    const intervId = setInterval(this.getCurrentTime, 1000)
+    this.setState({
+      intervId,
+    })
+  }
+
+  componentWillUnmount() {
+    console.log('componentWillUnmount, clear interval -> ', this.state.intervId)
+    clearInterval(this.state.intervId)
+  }
+
+  getCurrentTime = () => {
+    const { city, weather } = this.state
+    if (city && weather) {
+      const localTime = moment.utc(moment().utc().valueOf() + weather.timezone*1000)
+      this.setState({
+        time: localTime.format('DD/MM/YYYY HH:mm:ss')
+      })
+    }
+  }
+
   render() {
-    const { city, weather, loading } = this.state
+    const { city, time, weather, loading } = this.state
     return (
-      <div className="app-container">
-        <h1>Current weather in {city}</h1>
-        {weather && <WeatherCard weather={weather} />}
-        <div>
-          <h3>Enter your city</h3>
-          <Input placeholder='Melbourne, AU' loading={loading} onChange={this.handleCityInputChange} />
-          <Button primary loading={loading} onClick={this.searchWeather}>Search</Button>
+      <div>
+        <div className="row">
+          <Form>
+            <Form.Group inline>
+              <Form.Field>
+                <label>Enter your city</label>
+                <Input placeholder='Melbourne, AU' loading={loading} onChange={this.handleCityInputChange} />
+              </Form.Field>
+              <Button primary loading={loading} onClick={this.fetchWeather}>Search</Button>
+            </Form.Group>
+          </Form>
+        </div>
+        <div className="row">
+          <h2>Current weather in {city}</h2>
+          {weather && <WeatherCard weather={weather} />}
+          {time && <h3>Local time {time}</h3>}
         </div>
       </div>
     )
