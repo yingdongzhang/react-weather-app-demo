@@ -60,8 +60,8 @@ class App extends React.Component {
   }
 
   getCurrentTime = () => {
-    const { city, weather } = this.state
-    if (city && weather) {
+    const { weather } = this.state
+    if (weather) {
       const localTime = moment.utc(moment().utc().valueOf() + weather.timezone*1000)
       this.setState({
         time: localTime.format('DD/MM/YYYY HH:mm:ss')

@@ -7,8 +7,8 @@ import AppWithHooks from './AppWithHooks'
 import * as serviceWorker from './serviceWorker'
 
 ReactDOM.render(
-  // <App />,
-  <AppWithHooks />,
+  <App />,
+  // <AppWithHooks />,
   document.getElementById('root')
 )
 
