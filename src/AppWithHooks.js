@@ -7,6 +7,9 @@ export default function AppWithHooks() {
   return (
     <div>
       <div className="row">
+        <h1>Weather Card</h1>
+      </div>
+      <div className="row">
         <Form>
           <Form.Group inline>
             <Form.Field>
