@@ -5,16 +5,21 @@ import { useSelector, useDispatch } from 'react-redux'
 import './App.css'
 import WeatherCard from './components/WeatherCard'
 import fetchWeather from './actions/fetchWeather.action'
+import resetWeather from './actions/resetWeather.action'
+import { useDocumenTitle, useLocalTime } from './effects'
 
 export default function AppWithHooks() {
   const [ city, setCity ] = useState('')
   const { weather, loading } = useSelector(state => state.weather)
   const dispatch = useDispatch()
 
-  useDocumenTitle(city, loading, weather)
+  useDocumenTitle(city, weather)
+  const [ time, setTime ] = useLocalTime(weather ? weather.timezone : null)
 
   function handleCityInputChange(e) {
     setCity(e.target.value)
+    setTime('')
+    dispatch(resetWeather())
   }
 
   function handleSearch() {
@@ -23,6 +28,9 @@ export default function AppWithHooks() {
 
   return (
     <div>
+      <div className="row">
+        <h1>Weather Card</h1>
+      </div>
       <div className="row">
         <Form>
           <Form.Group inline>
@@ -35,19 +43,10 @@ export default function AppWithHooks() {
         </Form>
       </div>
       <div className="row">
-        <h2>Current weather in {city}</h2>
+        {city && <h2>Current weather in {city}</h2>}
         {weather && <WeatherCard weather={weather} />}
+        {time && <h3>Local time {time}</h3>}
       </div>
     </div>
   )
-}
-
-function useDocumenTitle(city, loading, weather) {
-  useEffect(() => {
-    if (loading) {
-      document.title = 'loading...'
-    } else if (weather) {
-      document.title = `${city} - ${weather.temp}°C`
-    }
-  })
 }

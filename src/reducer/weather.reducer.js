@@ -7,6 +7,8 @@ const weather = (state = {
       return { ...state, loading: true }
     case 'WEATHER_FETCHED':
       return { ...state, loading: false, weather: action.payload.weather }
+    case 'RESET_WEATHER':
+      return { weather: null, loading: false }
     default:
       return state
   }

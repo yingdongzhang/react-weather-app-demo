@@ -4,5 +4,6 @@ export default async function fetchWeatherApi(city) {
   return {
     ...data.main,
     ...data.weather[0],
+    timezone: data.timezone,
   }
 }

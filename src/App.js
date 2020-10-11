@@ -1,10 +1,12 @@
 import React from 'react'
 import { Form, Input, Button } from 'semantic-ui-react'
+import moment from 'moment'
 import { connect } from 'react-redux'
 
 import './App.css'
 import WeatherCard from './components/WeatherCard'
 import fetchWeather from './actions/fetchWeather.action'
+import resetWeather from './actions/resetWeather.action'
 
 class App extends React.Component {
   constructor(props) {
@@ -12,12 +14,18 @@ class App extends React.Component {
     
     this.state = {
       city: '',
+      time: '',
+      intervId: null,
     }
   }
 
   handleCityInputChange = (e) => {
+    const { resetWeather } = this.props
+    resetWeather()
+
     this.setState({
-      city: e.target.value
+      city: e.target.value,
+      time: '',
     })
   }
 
@@ -37,8 +45,30 @@ class App extends React.Component {
     }
   }
 
+  componentDidMount() {
+    const intervId = setInterval(this.getCurrentTime, 1000)
+    this.setState({
+      intervId,
+    })
+  }
+
+  componentWillUnmount() {
+    console.log('componentWillUnmount, clear interval -> ', this.state.intervId)
+    clearInterval(this.state.intervId)
+  }
+
+  getCurrentTime = () => {
+    const { weatherData } = this.props
+    if (weatherData && weatherData.weather) {
+      const localTime = moment.utc(moment().utc().valueOf() + weatherData.weather.timezone*1000)
+      this.setState({
+        time: localTime.format('DD/MM/YYYY HH:mm:ss')
+      })
+    }
+  }
+
   render() {
-    const { city } = this.state
+    const { city, time } = this.state
     const { weatherData } = this.props
     const { weather, loading } = weatherData
 
@@ -56,8 +86,9 @@ class App extends React.Component {
           </Form>
         </div>
         <div className="row">
-          <h2>Current weather in {city}</h2>
+          {city && <h2>Current weather in {city}</h2>}
           {weather && <WeatherCard weather={weather} />}
+          {time && <h3>Local time {time}</h3>}
         </div>
       </div>
     )
@@ -73,6 +104,7 @@ export default connect(
   (dispatch) => {
     return {
       fetchWeather: (city) => dispatch(fetchWeather(city)),
+      resetWeather: () => dispatch(resetWeather()),
     }
   }
 )(App)
