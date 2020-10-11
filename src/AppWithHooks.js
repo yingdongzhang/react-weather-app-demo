@@ -1,17 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Form, Input, Button } from 'semantic-ui-react'
-import { useSelector, useDispatch } from 'react-redux'
 
 import './App.css'
 import WeatherCard from './components/WeatherCard'
-import fetchWeather from './actions/fetchWeather.action'
-import resetWeather from './actions/resetWeather.action'
+import fetchWeatherApi from './api/fetchWeatherApi'
 import { useDocumenTitle, useLocalTime } from './effects'
 
 export default function AppWithHooks() {
   const [ city, setCity ] = useState('')
-  const { weather, loading } = useSelector(state => state.weather)
-  const dispatch = useDispatch()
+  const [ weather, setWeather ] = useState(null)
+  const [ loading, setLoading ] = useState(false)
 
   useDocumenTitle(city, weather)
   const [ time, setTime ] = useLocalTime(weather ? weather.timezone : null)
@@ -19,11 +17,14 @@ export default function AppWithHooks() {
   function handleCityInputChange(e) {
     setCity(e.target.value)
     setTime('')
-    dispatch(resetWeather())
+    setWeather(null)
   }
 
-  function handleSearch() {
-    dispatch(fetchWeather(city))
+  async function handleSearch() {
+    setLoading(true)
+    const weather = await fetchWeatherApi(city)
+    setWeather(weather)
+    setLoading(false)
   }
 
   return (

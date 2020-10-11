@@ -1,12 +1,10 @@
 import React from 'react'
 import { Form, Input, Button } from 'semantic-ui-react'
 import moment from 'moment'
-import { connect } from 'react-redux'
 
 import './App.css'
 import WeatherCard from './components/WeatherCard'
-import fetchWeather from './actions/fetchWeather.action'
-import resetWeather from './actions/resetWeather.action'
+import fetchWeatherApi from './api/fetchWeatherApi'
 
 class App extends React.Component {
   constructor(props) {
@@ -14,34 +12,38 @@ class App extends React.Component {
     
     this.state = {
       city: '',
+      weather: null,
+      loading: false,
       time: '',
       intervId: null,
     }
   }
 
   handleCityInputChange = (e) => {
-    const { resetWeather } = this.props
-    resetWeather()
-
     this.setState({
       city: e.target.value,
       time: '',
+      weather: null,
     })
   }
 
-  handleSearch = () => {
-    const { fetchWeather } = this.props
-    fetchWeather(this.state.city)
+  handleSearch = async () => {
+    this.setState({
+      loading: true,
+    })
+
+    const weather = await fetchWeatherApi(this.state.city)
+
+    this.setState({
+      weather,
+      loading: false,
+    })
   }
 
   componentDidUpdate() {
-    const { city } = this.state
-    const { weatherData } = this.props
-
-    if (weatherData.loading) {
-      document.title = 'loading...'
-    } else if (weatherData.weather) {
-      document.title = `${city} - ${weatherData.weather.temp}°C`
+    const { city, weather } = this.state
+    if (weather) {
+      document.title = `${city} - ${weather.temp}°C`
     }
   }
 
@@ -58,9 +60,9 @@ class App extends React.Component {
   }
 
   getCurrentTime = () => {
-    const { weatherData } = this.props
-    if (weatherData && weatherData.weather) {
-      const localTime = moment.utc(moment().utc().valueOf() + weatherData.weather.timezone*1000)
+    const { weather } = this.state
+    if (weather) {
+      const localTime = moment.utc(moment().utc().valueOf() + weather.timezone*1000)
       this.setState({
         time: localTime.format('DD/MM/YYYY HH:mm:ss')
       })
@@ -68,12 +70,12 @@ class App extends React.Component {
   }
 
   render() {
-    const { city, time } = this.state
-    const { weatherData } = this.props
-    const { weather, loading } = weatherData
-
+    const { city, time, weather, loading } = this.state
     return (
       <div>
+        <div className="row">
+          <h1>Weather Card</h1>
+        </div>
         <div className="row">
           <Form>
             <Form.Group inline>
@@ -95,16 +97,4 @@ class App extends React.Component {
   }
 }
 
-export default connect(
-  (state) => {
-    return {
-      weatherData: state.weather,
-    }
-  },
-  (dispatch) => {
-    return {
-      fetchWeather: (city) => dispatch(fetchWeather(city)),
-      resetWeather: () => dispatch(resetWeather()),
-    }
-  }
-)(App)
+export default App
