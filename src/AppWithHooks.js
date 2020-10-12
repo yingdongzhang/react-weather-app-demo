@@ -31,6 +31,9 @@ export default function AppWithHooks() {
   return (
     <div>
       <div className="row">
+        <h1>Weather Card</h1>
+      </div>
+      <div className="row">
         <Form>
           <Form.Group inline>
             <Form.Field>
@@ -42,7 +45,7 @@ export default function AppWithHooks() {
         </Form>
       </div>
       <div className="row">
-        <h2>Current weather in {city}</h2>
+        {city && <h2>Current weather in {city}</h2>}
         {weather && <WeatherCard weather={weather} />}
         {time && <h3>Local time {time}</h3>}
       </div>

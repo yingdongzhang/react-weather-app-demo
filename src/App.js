@@ -9,7 +9,7 @@ import fetchWeatherApi from './api/fetchWeatherApi'
 class App extends React.Component {
   constructor(props) {
     super(props)
-    
+
     this.state = {
       city: '',
       weather: null,
@@ -74,6 +74,9 @@ class App extends React.Component {
     return (
       <div>
         <div className="row">
+          <h1>Weather Card</h1>
+        </div>
+        <div className="row">
           <Form>
             <Form.Group inline>
               <Form.Field>
@@ -85,7 +88,7 @@ class App extends React.Component {
           </Form>
         </div>
         <div className="row">
-          <h2>Current weather in {city}</h2>
+          {city && <h2>Current weather in {city}</h2>}
           {weather && <WeatherCard weather={weather} />}
           {time && <h3>Local time {time}</h3>}
         </div>
