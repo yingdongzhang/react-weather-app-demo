@@ -21,7 +21,7 @@ export default function AppWithHooks() {
     setWeather(null)
   }
 
-  async function fetchWeather() {
+  async function handleSearch() {
     setLoading(true)
     const weather = await fetchWeatherApi(city)
     setWeather(weather)
@@ -40,7 +40,7 @@ export default function AppWithHooks() {
               <label>Enter your city</label>
               <Input placeholder='Melbourne, AU' loading={loading} onChange={handleCityInputChange} />
             </Form.Field>
-            <Button primary loading={loading} onClick={fetchWeather}>Search</Button>
+            <Button primary loading={loading} onClick={handleSearch}>Search</Button>
           </Form.Group>
         </Form>
       </div>

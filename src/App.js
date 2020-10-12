@@ -27,7 +27,7 @@ class App extends React.Component {
     })
   }
 
-  fetchWeather = async () => {
+  handleSearch = async () => {
     this.setState({
       loading: true,
     })
@@ -83,7 +83,7 @@ class App extends React.Component {
                 <label>Enter your city</label>
                 <Input placeholder='Melbourne, AU' loading={loading} onChange={this.handleCityInputChange} />
               </Form.Field>
-              <Button primary loading={loading} onClick={this.fetchWeather}>Search</Button>
+              <Button primary loading={loading} onClick={this.handleSearch}>Search</Button>
             </Form.Group>
           </Form>
         </div>
